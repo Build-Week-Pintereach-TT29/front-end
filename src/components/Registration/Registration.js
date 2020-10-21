@@ -3,6 +3,42 @@ import axios from 'axios'
 import schema from './schema'
 import * as yup from 'yup'
 import User from './RegistrationCheck'
+import { Button, Typography, Grid, FormControl, InputLabel }from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles'
+import Textfield from '@material-ui/core/TextField'
+import Checkbox from '@material-ui/core/Checkbox'
+
+//BEGINNING OF STYLE//
+
+
+const useStyles = makeStyles({
+mainContainer: {
+    display: 'Grid',
+    justifyContent: 'center',
+    position: 'relative',
+    },
+
+formContainer: {
+    display: 'Grid'
+
+},
+
+inputFields: {
+    marginBottom: '2rem', 
+    width: '50%',
+},
+
+submitBtn: {
+    backgroundColor: '#00ffff',
+    padding: '1rem',
+    width: '50%'
+}
+
+})
+
+
+//BEGINNING OF LOGIC//
+
 
 const initialFormValues = {
     name: '',
@@ -17,14 +53,16 @@ const initialFormErrors = {
   name: '',
   username: '',
   email: '',
-  password: ''
+  password: '',
+  terms: false
 }
 
 const initialDisabled = true;
 const initialRender = []
 
 
-export default function Registration() {
+export default function Registration(props) {
+const classes = useStyles()
 
 const [render, setRender] = useState(initialRender)
 const [formValues, setFormValues] = useState(initialFormValues)
@@ -34,7 +72,7 @@ const [disabled, setDisabled] = useState(initialDisabled)
 
 const getUsers = () => {
     axios
-        .get('http://herokuurl.herokuapp.com/users')
+        .get('https://pintereach-app-api.herokuapp.com/users')
         .then(res => {
             setRender(res.data)
         })
@@ -46,7 +84,7 @@ const getUsers = () => {
 
 const postUsers = (newUser) => {
    axios
-     .post('http://herokuurl.herokuapp.com/register', newUser)
+     .post('https://pintereach-app-api.herokuapp.com/register', newUser)
      .then(res => {
    setRender([res.data, ...render])
    setFormValues(initialFormValues);
@@ -117,36 +155,107 @@ useEffect(() => {
 
 return (
 
+<div>
+    <Typography 
+    variant='h4'
+    style={{ color: 'darkgrey', textAlign: 'center'}}
+    >
+    Registration Form
+    </Typography>
+
     <div>
+        <form className='classes' onSubmit={onSubmit}>
 
-        <h2 className='title'>Registration Form:</h2>
-<form onSubmit={onSubmit}>
-
-
-    <div className='error'>{errors.name}</div>
-    <label> Name: 
-        <input
-            name='name'
+            <Textfield
+            className={classes.inputFields}
+            variant='standard'
+            label='Name'
+            id='name'
             type='text'
-            value={formValues.name}
+            required
+            defaultValue={formValues.name}
             onChange={onChange}
-        />
-    </label>
+            error={Boolean(errors.name ? errors.name : '')}
+            helperText={errors.name}
+            /><br />
+
+            <Textfield
+            className={classes.inputFields}
+            variant='standard'
+            id='username'
+            label='Username'
+            type='text'
+            required
+            defaultValue={formValues.username}
+            onChange={onChange}
+            helperText={errors.username}
+            /><br />
+
+            <Textfield
+            className={classes.inputFields}
+            variant='standard'
+            id='email'
+            label='Email'
+            type='email'
+            required
+            defaultValue={formValues.email}
+            onChange={onChange}
+            helperText={errors.email}
+            /><br />
+
+            <Textfield
+            className={classes.inputFields}
+            variant='standard'
+            id='password'
+            label='Password'
+            type='password'
+            required
+            defaultValue={formValues.password}
+            onChange={onChange}
+            helperText={errors.password}
+            /><br />
 
 
-    <div className='error'>{errors.username}</div>
-    <label> Username: 
+            <InputLabel> Terms of Service </InputLabel>
+            <Checkbox id='standard-basic'
+            className={classes.inputFields}
+            variant='standard'
+            label='Terms of Service'
+            name='terms'
+            type='checkbox'
+            value={formValues.terms}
+            onChange={onChange}
+            />
+            <br />
+
+        <Button 
+        className={classes.submitBtn}
+        variant='contained'
+        type='submit'
+        disabled={disabled} onClick={formSubmit}>Submit!</Button>
+
+
+        </form>
+
+    </div>
+
+    {/* <Textfield id='standard-basic'>
+    <Error className='error'>{errors.username}</Error>
+    <label> Username: <br />
         <input
+        inputProps={{}}
         name='username'
         type='text'
         value={formValues.username}
         onChange={onChange}
         />
     </label>
+    </Textfield>
 
 
-    <div className='error'>{errors.email}</div>
-    <label>Email:
+    <Textfield id='standard-basic'>
+    <Error className='error'>{errors.email}</Error>
+    <label>Email: <br />
         <input
         name='email'
         type='email'
@@ -154,10 +263,12 @@ return (
         onChange={onChange}
         />
     </label>
+    </Textfield>
 
 
-    <div className='error'>{errors.password}</div>
-    <label> Password:
+    <Textfield id='standard-basic'>
+    <Error className='error'>{errors.password}</Error>
+    <label> Password: <br />
         <input
         name='password'
         type='password'
@@ -165,9 +276,11 @@ return (
         onChange={onChange}
         />
     </label>
+    </Textfield>
 
 
-        <div className='error'>{errors.terms}</div>
+    <Textfield id='standard-basic'>
+    <Error className='error'>{errors.terms}</Error>
     <label> Terms of Service:
         <input
         name='terms'
@@ -176,14 +289,13 @@ return (
         onChange={onChange}
         />
     </label>
-    <br />
-
-    <button disabled={disabled}>Submit!</button>
+    </Textfield> */}
 
 
-    </form>
+    {render.map((user)=> {
+     return <User key={user.id} details={user}/>
+    })}
 
-     <User details={formValues}/>
 
 </div>
 

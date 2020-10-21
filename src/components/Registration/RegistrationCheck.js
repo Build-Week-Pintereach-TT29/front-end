@@ -1,11 +1,12 @@
 import React from 'react'
 
-export default function User({ details }){
+export default function User(props) {
 
+const { details } = props
 
-    // if(!details) {
-    //     return <h3>Register today to begin pinning articles!</h3>
-    // }
+    if(!details) {
+        return <h3>Register today to begin pinning articles!</h3>
+    }
 
 
     return(
