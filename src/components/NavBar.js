@@ -1,8 +1,9 @@
 import React from 'react'
-import LogIn from '../Login/Login'
+import LogIn from './Login'
 import { AppBar, Toolbar, makeStyles, Typography } from '@material-ui/core'
 import { Link, Route, Switch } from 'react-router-dom'
 import flexGrow from '@material-ui/system'
+import Registration from './Registration'
 
 const useStyles = makeStyles({
 
@@ -41,7 +42,7 @@ return(
             <Toolbar className={classes.header}>
             <div>
             <Link to='/'>Home</Link>
-            <Link to='/' className={classes.links}>Registration</Link>
+            <Link to='/Registration' className={classes.links}>Registration</Link>
             </div>
             <div className={classes.buffer} />
              <LogIn/>
