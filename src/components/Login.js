@@ -11,11 +11,11 @@ const useStyles = makeStyles({
         flexWrap: 'wrap',
     },
     errors1:{
-        marginLeft: '15%',
+        marginLeft: '13%',
         color: 'red',
     },
     errors2:{
-        marginLeft: '18%',
+        marginLeft: '15%',
         color: 'red',
 
     }
@@ -32,10 +32,10 @@ const initialFormErrors = {
 }
 
 const initialDisabled = true
-
+const initialLogin = []
 
 export default function LogIn() {
-
+const [credentials, setCredentials] = useState(initialLogin)
 const [formValues, setFormValues] = useState(initialFormValues)
 const [errors, setErrors] = useState(initialFormErrors)
 const [disabled, setDisabled] = useState(initialDisabled)
@@ -69,8 +69,27 @@ yup
             })
 }
 
-const formSubmit = () => {
+const postLogin = () => {
+    axios
+        .post('https://pintereach-app-api.herokuapp.com/login', credentials)
+        .then(res => {
+            setCredentials(res.data)
+        })
+        .catch(err => {
+            console.log('POST ERR -->', err)
+        })
+        .finally(() => {
+            setFormValues(initialFormValues)
+        })
+}
 
+
+const formSubmit = () => {
+    const credentials = {
+        name: formValues.name.trim(),
+        password: formValues.password.trim(),
+    }
+    postLogin(credentials)
 }
 
 useEffect(() => {
