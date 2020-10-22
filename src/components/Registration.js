@@ -3,7 +3,7 @@ import axios from 'axios'
 import schema from './schema'
 import * as yup from 'yup'
 import User from './RegistrationCheck'
-import { Button, Typography, Grid, FormControl, InputLabel }from '@material-ui/core'
+import { Button, Typography, InputLabel }from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import Textfield from '@material-ui/core/TextField'
 import Checkbox from '@material-ui/core/Checkbox'
@@ -69,25 +69,11 @@ const [formValues, setFormValues] = useState(initialFormValues)
 const [errors, setErrors] = useState(initialFormErrors)
 const [disabled, setDisabled] = useState(initialDisabled)
 
-
-const getUsers = () => {
-    axios
-        .get('https://pintereach-app-api.herokuapp.com/users')
-        .then(res => {
-            setRender(res.data)
-        })
-        .catch(err => {
-            console.log('GET ERR -->', err)
-        })
-}
-
-
 const postUsers = (newUser) => {
    axios
      .post('https://pintereach-app-api.herokuapp.com/register', newUser)
      .then(res => {
    setRender([res.data, ...render])
-   setFormValues(initialFormValues);
      })
      .catch(err => {
        console.log('POST ERR -->', err)
@@ -141,10 +127,6 @@ const onChange = (evt) => {
     const valueToUse = type === 'checkbox' ? checked : value;
     formUpdate(name, valueToUse)
 }
-
-useEffect(() => {
-    getUsers()
-}, [])
 
 useEffect(() => {
   schema.isValid(formValues).then((valid) => {
@@ -223,6 +205,7 @@ return (
             label='Terms of Service'
             name='terms'
             type='checkbox'
+            required
             value={formValues.terms}
             onChange={onChange}
             />
@@ -232,7 +215,10 @@ return (
         className={classes.submitBtn}
         variant='contained'
         type='submit'
-        disabled={disabled} onClick={formSubmit}>Submit!</Button>
+        disabled={disabled}
+        onClick={formSubmit}>
+        Submit!
+        </Button>
 
 
         </form>

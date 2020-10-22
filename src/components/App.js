@@ -13,14 +13,15 @@ function App() {
     <div className="App">
         <NavBar />
         <Switch>
-        <Route path='/Registration' component={Registration}>
+        <Route path='/Registration'>
         <Registration/>
         </Route>
         <Route path='/'>
         <HomePage />
         </Route>
         </Switch>
-    </div>
+
+        </div>
 
   );
 }

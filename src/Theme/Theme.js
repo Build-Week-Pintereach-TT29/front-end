@@ -37,6 +37,7 @@ export default {
          small: '1%',
          medium: '5%',
          huge: '15%',
+         auto: 'auto',
      },
 
     border: {

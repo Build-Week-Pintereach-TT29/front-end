@@ -5,11 +5,19 @@ import * as yup from 'yup'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles({
-    login:{
+    parent: {
         display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        width: '100%',
+        width: '31%',
+        flexWrap: 'wrap',
+    },
+    errors1:{
+        marginLeft: '13%',
+        color: 'red',
+    },
+    errors2:{
+        marginLeft: '15%',
+        color: 'red',
+
     }
 })
 
@@ -24,10 +32,10 @@ const initialFormErrors = {
 }
 
 const initialDisabled = true
-
+const initialLogin = []
 
 export default function LogIn() {
-
+const [credentials, setCredentials] = useState(initialLogin)
 const [formValues, setFormValues] = useState(initialFormValues)
 const [errors, setErrors] = useState(initialFormErrors)
 const [disabled, setDisabled] = useState(initialDisabled)
@@ -61,8 +69,27 @@ yup
             })
 }
 
-const formSubmit = () => {
+const postLogin = () => {
+    axios
+        .post('https://pintereach-app-api.herokuapp.com/login', credentials)
+        .then(res => {
+            setCredentials(res.data)
+        })
+        .catch(err => {
+            console.log('POST ERR -->', err)
+        })
+        .finally(() => {
+            setFormValues(initialFormValues)
+        })
+}
 
+
+const formSubmit = () => {
+    const credentials = {
+        name: formValues.name.trim(),
+        password: formValues.password.trim(),
+    }
+    postLogin(credentials)
 }
 
 useEffect(() => {
@@ -74,38 +101,46 @@ useEffect(() => {
 const classes = useStyles();
 
 return (    
-    <div className='classes'>
- 
-    <form onSubmit={onSubmit}>
-    
-    <div className={classes.login}>
-    <label> Username: 
-    <input
-    name='name'
-    type='text'
-    value={formValues.name}
-    onChange={onChange}
-    />
-    </label>
+    <div className={classes.parent}>
+
+        <div className={classes.errors1}>
+            {errors.name}
+        </div>
+        <div className={classes.errors2}>
+            {errors.password}
+        </div>
+
+        <form onSubmit={onSubmit}>
+        
+        
+        <div>
+        <label> Username: 
+        <input
+        name='name'
+        type='text'
+        value={formValues.name}
+        onChange={onChange}
+        />
+        </label>
 
 
 
+        
+        <label> Password: 
+        <input
+        name='password'
+        type='password'
+        value={formValues.password}
+        onChange={onChange}
+        />
+        </label>
 
-    <label> Password: 
-    <input
-    name='password'
-    type='password'
-    value={formValues.password}
-    onChange={onChange}
-    />
-    </label>
 
 
+            <button disabled={disabled}>Log In!</button>
+        </div>
 
-        <button disabled={disabled}>Log In!</button>
-    </div>
-
-    </form>
+        </form>
     </div>
 
     )
